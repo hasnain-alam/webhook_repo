@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>GitHub Webhook Tracker</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #f4f4f4; }
+        h1 { color: #333; }
+        .event { margin-bottom: 10px; background: #fff; padding: 10px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .timestamp { color: #888; font-size: 0.9em; }
+    </style>
+</head>
+<body>
+    <h1>GitHub Webhook Tracker</h1>
+    {% if events %}
+        <ul>
+        {% for event in events %}
+            <li class="event">
+                <strong>{{ event.type }}</strong> - 
+                {{ event.author }} 
+                {% if event.type == 'PUSH' %}
+                    pushed to <strong>{{ event.to_branch }}</strong>
+                {% elif event.type == 'PULL_REQUEST' %}
+                    submitted a pull request from <strong>{{ event.from_branch }}</strong> to <strong>{{ event.to_branch }}</strong>
+                {% elif event.type == 'MERGE' %}
+                    merged from <strong>{{ event.from_branch }}</strong> to <strong>{{ event.to_branch }}</strong>
+                {% endif %}
+                <div class="timestamp">at {{ event.readable_time }}</div>
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No events yet.</p>
+    {% endif %}
+</body>
+</html>
